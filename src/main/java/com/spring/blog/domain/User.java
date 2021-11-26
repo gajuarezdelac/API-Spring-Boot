@@ -1,14 +1,23 @@
 package com.spring.blog.domain;
 
 import java.io.Serializable;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+
+import lombok.Data;
 
 @Entity
+@Data
 public class User implements Serializable {
 	
 	
@@ -16,7 +25,7 @@ public class User implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false, updatable = false, name = "user_id")
+	@Column(nullable = false, updatable = false)
 	private Long id;
 	
 	private String names;
@@ -25,71 +34,11 @@ public class User implements Serializable {
 	
 	private String username;
 	
-	private String password;
+	private String password;	
 	
-	private String rol;
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name =  "user_id", referencedColumnName = "id"),
+	inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	private Set<Role> roles;
 	
-	private String[] authorities;
-	
-	public String getNames() {
-		return names;
-	}
-	public void setNames(String names) {
-		this.names = names;
-	}
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public String getSurnames() {
-		return surnames;
-	}
-	public void setSurnames(String surnames) {
-		this.surnames = surnames;
-	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	
-	public String getRol() {
-		return rol;
-	}
-	public void setRol(String rol) {
-		this.rol = rol;
-	}
-	public String[] getAuthorities() {
-		return authorities;
-	}
-	public void setAuthorities(String[] authorities) {
-		this.authorities = authorities;
-	}
-	
-	
-	public User(Long id, String names, String surnames, String username, String password) {
-		super();
-		this.id = id;
-		this.names = names;
-		this.surnames = surnames;
-		this.username = username;
-		this.password = password;
-	}
-	
-	
-	
-
 }
