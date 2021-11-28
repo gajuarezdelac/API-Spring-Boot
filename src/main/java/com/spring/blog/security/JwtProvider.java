@@ -26,14 +26,14 @@ public class JwtProvider {
 	@Value("app.jwt-secret")
 	private String jwtSecret;
 	
-	@Value("app.jwt-expiration-milliseconds")
-	private String jwtExpiration;
+//	@Value("app.jwt-expiration-milliseconds")
+	private long jwtExpirationInMs = 503302020;
 	
 	public String generateToken(Authentication authentication)  {
 		
 		String username = authentication.getName();
 		Date currentDate = new Date();
-		Date expireDate = new Date(currentDate.getTime());
+		Date expireDate = new Date(currentDate.getTime() + jwtExpirationInMs);
 		
 		String token = Jwts.builder()
 				.setSubject(username)

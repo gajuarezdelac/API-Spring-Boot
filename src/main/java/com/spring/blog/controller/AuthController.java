@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spring.blog.domain.User;
 import com.spring.blog.dto.LoginDTO;
 import com.spring.blog.dto.RegisterDTO;
+import com.spring.blog.response.JwtAuthResponse;
+import com.spring.blog.security.JwtProvider;
 import com.spring.blog.service.UserService;
 
 
@@ -25,16 +27,22 @@ public class AuthController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
+	@Autowired
+	private JwtProvider jwtProvider;	
+	
 	@Autowired 
 	private UserService userService;
 	
 	@PostMapping("/signin")
-	public ResponseEntity<String> createComment(@RequestBody LoginDTO loginDTO) {
+	public ResponseEntity<JwtAuthResponse> createComment(@RequestBody LoginDTO loginDTO) {
 		
 		Authentication authentication =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
-		return new ResponseEntity<>("User signed-in successfully ", HttpStatus.CREATED);
+		// Get token
+		String token = jwtProvider.generateToken(authentication);
+	
+		return new ResponseEntity<>(new JwtAuthResponse(token), HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/register") 
