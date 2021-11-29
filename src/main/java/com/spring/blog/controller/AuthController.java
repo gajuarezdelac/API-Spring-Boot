@@ -19,7 +19,11 @@ import com.spring.blog.response.JwtAuthResponse;
 import com.spring.blog.security.JwtProvider;
 import com.spring.blog.service.UserService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
+
+@Api(value = "Auth Controller V1")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -33,6 +37,7 @@ public class AuthController {
 	@Autowired 
 	private UserService userService;
 	
+	@ApiOperation(value = "Endpoint for signin")
 	@PostMapping("/signin")
 	public ResponseEntity<JwtAuthResponse> createComment(@RequestBody LoginDTO loginDTO) {
 		
@@ -45,6 +50,7 @@ public class AuthController {
 		return new ResponseEntity<>(new JwtAuthResponse(token), HttpStatus.CREATED);
 	}
 	
+	@ApiOperation(value = "Endpoint for register user")
 	@PostMapping("/register") 
 	public ResponseEntity<User> registerUser(@RequestBody RegisterDTO params) throws Exception {
 		User user = userService.register(params);
